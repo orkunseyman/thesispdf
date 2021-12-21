@@ -1,25 +1,22 @@
 var express = require('express');
 var router = express.Router();
 const pool = require("../db")
-
 router.get('/', function(req, res, next) {
-  res.render('login');
-  
+  res.render('newuser');
 });
 router.post('/', async function(req, res, next) {
+    let username=req.body.username
     let email=req.body.email
     let password=req.body.password
-    await pool.query('SELECT * FROM admin', (error, results) => {
+
+    pool.query('INSERT INTO users (username,email,password) VALUES ($1,$2,$3)', [username,email,password], (error, results) => {
         if (error) {
           throw error
         }
-        if(results.rows[0].admin_name==email&&results.rows[0].password==password){
-        res.redirect('/admin');
-         }
-        else{
-        res.send('yanlış')
-        }
       })
   });
+
+
+
 
 module.exports = router;
